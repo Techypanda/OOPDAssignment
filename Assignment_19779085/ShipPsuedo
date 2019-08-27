@@ -1,0 +1,124 @@
+abstract class Ship
+    classconstants
+        none
+    classfields
+        String serialNum
+        integer year
+        Engine engine
+    class methods
+        default constructor
+        IMPORT none
+        EXPORT none
+        ASSERTION: A default object constructed
+            serialNum := "100.999"
+            year := 1951
+            CONSTRUCT engine USING default
+        end default
+
+        alternate constructor
+        IMPORT String inSerial, integer inYear, Engine inEngine
+        EXPORT none
+        ASSERTION: A object with values made
+            setSerial <- inSerial
+            setYear <- inYear
+            setEngine <- inEngine
+        end alt cons
+
+        copy constructor
+        IMPORT Ship inShip
+        EXPORT none
+        ASSERTION: A ship will be made copied
+            serialNum := inShip.getSerialNum
+            year := inShip.getYear
+            CONSTRUCT engine USING copy <- inShip.getEngine
+        end copy
+
+        abstract method calcTravel
+        IMPORT integer distance
+        EXPORT real time
+        ALGORITHM
+        END calcTravel // no algo its a abstract
+
+        abstract method clone
+        IMPORT none
+        EXPORT Ship shipClone
+        ASSERTION: A ship will be cloned.
+        // no algo its a abstract
+        end clone
+        
+        toString
+        IMPORT none
+        EXPORT String outString
+        ASSERTION: A ships details made into ship
+            outString := "This ships serialNum is " + serialNum
+            + " and its year is " + year + " and its engine details are "
+            + engine.toString <- none
+        end toString
+
+        getters // all the same
+        IMPORT none
+        EXPORT associatedvalue
+            return associatedvalue
+        end getters
+
+        setSerialNum
+        IMPORT String inSerialNum
+        EXPORT none
+        ASSERTION: SerialNum will be validated then set
+            if (validSerialNum <- inSerialNum = false) THEN
+                throw IllegalArgumentException("Invalid SerialNum")
+            END IF
+            serialNum := inSerialNum
+        end setSerialNum
+        
+        validSerialNum
+        IMPORT String inSerialNum
+        EXPORT Boolean validSerialNum
+        ASSERTION: Validation occurs
+            validSerialNum := false
+            if inSerialNum.length = 7 THEN
+                String[] serials := inSerialNum.split <- "\\."
+                if parseInt(Serials[0]) > 99 AND parseInt(serials[0]) < 301
+                AND parseInt(serials[1]) > 000 AND parseInt(serials[1]) < 1000
+                THEN
+                    validSerialNum = true
+                END IF
+            END IF
+        END validSerialNum
+
+        setYear
+        IMPORT integer inYear
+        EXPORT none
+        ASSERTION: Validation then set
+            IF inYear < 1950 OR inYear > 2022 THEN
+                throw IllegalArgumentException("invalid year.")
+            END IF
+            year := inYear
+        end setYear
+    
+        setEngine
+        IMPORT engine inEngine
+        EXPORT none
+        ASSERTION: set, Validation handled in Engine
+            CONSTRUCT engine USING inEngine
+        end setEngine
+
+        equals
+        IMPORT Object inObject
+        EXPORT boolean isEqual
+        ASSERTION: will check if equals
+            IF inObject is really Ship
+                inShip := (Ship)inObject
+                IF inShip.getSerialNum.equals(serialNum)
+                    IF inShip.getYear = year
+                        IF inShip.getEngine.equals(engine)
+                            isEqual := true
+            end if
+        end equals
+
+        abstract method toFileString
+        IMPORT none
+        EXPORT string fileString
+        END toFileString
+
+end class

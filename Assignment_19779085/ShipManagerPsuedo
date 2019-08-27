@@ -1,0 +1,15 @@
+class ShipManager
+    class constants:
+        
+    class fields:
+        
+    class methods:
+        main
+        import none
+        export none
+        algorithm:
+            TRY
+                UserInterface UI = new UserInterface
+                UI.mainMenu <- none
+            CATCH exception
+                OUTPUT "Error: " + e.getMessage + " \n going to exit!"

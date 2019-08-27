@@ -1,0 +1,14 @@
+CLASS ERROR
+    CLASS CONSTANTS:
+        none
+    CLASS FIELDS:
+        none
+    CLASS METHODS:
+        static public method showError
+        IMPORTS string error
+        EXPORTS none
+        PURPOSE show erorr
+        ALGORITM
+            OUTPUT error
+        END showError
+        

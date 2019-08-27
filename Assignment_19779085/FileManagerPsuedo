@@ -1,0 +1,79 @@
+static class FileManager
+    class methods:
+        static input
+        IMPORT filename (String), ShipStorage shipStorage
+        EXPORT none
+        ALGORITHM:
+            fileStream := null
+            TRY
+                line = READ LINE
+                while line != null
+                    TRY
+                    lineArray = line.split(",")
+                
+                    IF lineArray LENGTH is NOT 7 THEN
+                        THROW IllegalArgumentException("Invalid File Format")
+                    IF lineArray[0] LENGTH is NOT 1 THEN
+                        THROW IllegalArgumentException("Invalid Ship");
+                
+                    ship = lineArray[0].charAt(0)
+                    serialNum = validateSerialNum(lineArray[1] CONVERT TO REAL)
+                    year = validateYear(lineArray[2] CONVERT TO INTEGER)
+                    cylinders = validateCylinders(lineArray[3] CONVERT TO INTEGER)
+                    fuel = validateFuel(lineArray[4])
+
+                    CONSTRUCT outEngine USING cylinders, fuel (ALTERNATE CONSTRUCTOR)
+
+                    CASE UPPERCASE type
+                        case S:
+                            hull = validateHull(lineArray[5])
+                            depth = validateDepth(lineArray[6])
+
+                            CONSTRUCT submarine USING serialNum, year, hull, depth
+                                                      outEngine
+                            shipStorage.addShip(submarine)
+                        case F:
+                            wingspan = validateWingSpan(lineArray[5])
+                            ordanace = validateOrdanace(lineArray[6])
+                        
+                            CONSTRUCT fighterJet USING serialNum, year, hull, depth
+                                                       outEngine
+                            shipStorage.addShip(fighterJet)
+                        default:
+                            THROW IllegalArgumentException("not valid ship")
+                    end case
+                    CATCH (IllegalArgumentException e)
+                        UserInterface.showError(e.message())
+                    readNextLine <- none
+                end while
+                fileStream.close <- none
+            end try
+            CATCH (IOEXCEPTION e)
+                if filestream not null then
+                    try filestream.close <- none catch (ioexception e2) // imposs
+                end if
+                Error.showError <- e.getMessage()
+        end method
+
+        output
+        import string filename, shipstorage shipstorage
+        export none
+        assertion: will output file
+        algorithm:
+            FileOutputStream fileStream := null;
+            try
+                CONSTRUCT fileStream using alternate <- filename
+                CONSTRUCT pw using alternate <- fileStream
+                for integer i = 0 TO shipStorage.getShipCount() 
+                    pw.println <- shipStorage.getShip.toFileString <- none                
+                    ELSE
+                        THROW IllegalArgumentException("No such ship");
+                end for
+                pw.close <- none
+            end try
+            CATCH IOEXCEPTION e
+                IF fileStream NOT NULL
+                    try Filestream.close catch ioexception e2 // nothing to do
+                error.showError(e.getMessage())
+            CATCH IllegalArgumentException
+                Error.showError(e.getMessage())

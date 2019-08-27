@@ -1,0 +1,127 @@
+class Submarine extends Ship
+    class constants:
+        VALIDHULL (String Array Of Size 3)
+        VALIDHULL[0] = "STEEL"
+        VALIDHULL[1] = "ALLOY"
+        VALIDHULL[2] = "TITANIUM"
+    classfields:
+        hull (String)
+        maxDepth (Real)
+    class methods:
+        constructor
+        IMPORT nothing
+        EXPORT nothing
+        ASSERTION: a submarine will be constructed.
+        ALGORITHM:
+            CONSTRUCT super USING default
+            hull = "STEEL"
+            maxDepth = -500.0
+        end constructor
+        
+        alternateConstructor
+        IMPORT inYear (Integer), inHull (String), inMaxDepth (Real), 
+               inSerialNum(Integer), inEngine(Engine)
+        EXPORT none
+        ASSERTION: a submarine will be verified.
+        ALGORITHM:
+            CONSTRUCT super USING alternate <- inSerialNum, inYear, inEngine
+            setHull <- inHull
+            setMaxDepth <- inMaxDepth
+        end alternateConstructor    
+        
+        copyConstructor
+        IMPORT inSubmarine (Submarine)
+        EXPORT none
+        ASSERTION: a submarine will be copied
+        ALGORITHM:
+            CONSTRUCT super USING copy <- inSubmarine
+            hull = inSubmarine.getHull <- none
+            maxDepth = inSubmarine.getMaxDepth <- none
+        end copyConstructor
+ 
+        clone
+        IMPORT nothing
+        EXPORT submarineClone
+        ASSERTION: Object will be cloned to a new Object
+        ALGORITHM:
+            CONSTRUCT submarineClone USING copy <- this
+        end clone
+ 
+        baseAccessor
+        IMPORT nothing
+        EXPORT accessedValue
+        ASSERTION: will export a copy of associated get
+        ALGORITHM:
+            export copy of associatedValue
+        end baseAccessor // same for all gets
+
+        equals
+        IMPORT inObject
+        EXPORT isEqual (boolean)
+        ASSERTION: will return if is same or not
+        ALGORITHM:
+            isEqual := false
+            IF inObject is Submarine THEN
+                make inObject to Submarine named inSubmarine
+                IF super.equal <- inSubmarine THEN
+                    if hull = inSubmarine.getHull <- none THEN
+                        IF maxDepth = inSubmarine.getMaxDepth <- none THEN
+                            isEqual = true
+        end equals
+
+        toString
+        IMPORT nothing
+        EXPORT submarineString
+        ASSERTION: Object will be output as a string
+        ALGORITHM:
+            super.toString + " the ship is of type Submarine and has a hull of"
+            + " " + hull + " and a maxDepth of " + maxDepth
+        end toString
+
+        setHull
+        IMPORT inHull (String)
+        EXPORT nothing
+        ASSERTION: validation then hull changed
+            IF validHull <- inHull = false THEN 
+               throw illegalArgumentException
+            hull := inHull
+        end setHull
+        
+        setMaxDepth
+        IMPORT inDepth (Real)
+        EXPORT nothing
+        ASSERTION: VALIDATION THEN DEPTH CHANGED
+            IF inMaxDepth < -500.0 OR inMaxDepth > 0 THEN
+                throw illegalArgumentException
+            maxDepth := inDepth
+        end setMaxDepth
+
+        validHull
+        IMPORT inHull
+        EXPORT valid (Boolean)
+        ASSERTION: Will return if valid or not
+        ALGORITHM:
+            valid := false
+            FOR integer i = 0 TO 2 (inclusive) CHANGEBY 1
+                IF inHull = VALIDHULL[i] THEN
+                    valid := true
+            END FOR
+        end validHull
+
+        calcDistance
+        IMPORT (integer) distance
+        EXPORT hoursTaken (REAL)
+        ASSERTION: will calc hours taken for submarine
+        ALGORTHM:
+            hoursTaken = ((Real)distance / (Real)cylinders) * (1 / (10 + (maxDepth * -1))))
+
+        toFileString
+        IMPORT none
+        EXPORT String fileString
+        ASSERTION: will return fileString
+        ALGORITHM:
+            stringToReturn := `"S," + super.getSerialNum() + "," + 
+            super.getYear() + "," + super.getEngine().getCylinders() + "," 
+            + super.getFuel() + "," + hull + "," + maxDepth
+        end toFileString`
+end class

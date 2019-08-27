@@ -1,0 +1,182 @@
+class ShipStorage
+    class constants:
+        MAXSIZE = 30
+    class fields:
+        Ship[] ships
+        Integer shipCount
+    class methods:
+        def constructor
+        IMPORT none
+        EXPORT none
+        ASSERTION: a ShipStorage with count 0 for both will be init
+        ALGORITHM
+            ships = Ship[MAXSIZE]
+            shipCount := 0
+        end def constructor
+
+        addShip
+        IMPORT FighterJet inFighterJet
+        EXPORT none
+        ASSERTION: a fighterjet will be added to shipstorage        
+        ALGORITHM
+            TRY
+                IF verifyShipConditions <- inShip, shipCount
+                    ships[shipCount] := inShip
+                    shipCount += 1
+            CATCH argumentexception e
+                Error.showError "Unable to add FighterJet due to: " + e.message
+        
+        full
+        IMPORT none
+        EXPORT none
+        ASSERTION: will throw exception if shipStorage is full
+        ALGORTHM
+            if shipCount > MAXSIZE THEN
+                throw IllegalArgumentException <- "ShipStorage is full!
+                no more ships can be added!"
+            END IF
+        
+        verifyShipConditions
+        IMPORT Ship inShip, Integer count
+        EXPORT verification
+        ASSERTION: ships will be verified and a boolean will be returned
+        ALGORITHM
+            verification := false
+            IF inShip NOT NULL THEN
+                IF count <= MAXSIZE THEN
+                    verification := true
+                ELSE
+                    throw argumentexception "MaxSize has been reached, cant
+                                             add more to the array!"
+            ELSE
+                throw argumentexception "Inputted Object is null!"
+            END IF
+
+        destinationCheck
+        IMPORT integer distance
+        EXPORT String fastestShip
+        ASSERTION: destination is checked via calcTravel
+        ALGORITHM
+            if shipCount < 1 THEN
+                throw IllegalArgumentException("There are no ships!")
+            end IF            
+
+            currentLowest := Double.MAX_VALUE // Highest Real Value, cant be higher
+            FOR int i = 0 TO shipCount (exclusive) CHANGEBY 1
+                shipToString (ARRAY OF STRING) := ships[i].toFileString <- none .split <- (",")
+                type := shipToString[0]
+                IF ships[i].calcDistance <- distance < currentLowest
+                    currentLowest := ships[i].calcDistance <- distance
+                    fastestShip := "Fastest Ship: " + type +
+                                   ships[i].getSerialNum <- none
+                                 + ", " + currentLowest + " hours"
+                END IF
+            END FOR
+            catch IllegalArgumentException e
+                Error.showError <- e.getMessage <- none
+                fastestShip := ""
+            end catch
+
+        findDuplicates
+        IMPORT none
+        EXPORT String duplicates
+        ASSERTION: Duplicates will be output
+            if shipCount < 1 THEN
+                throw IllegalArgumentException("There are no Ships!")
+            end IF
+            duplicates = ""
+            duplicates = duplicatesFinder <- duplicates, shipCount, 
+                                             ships
+            catch IllegalArgumentException e
+                Error.showError <- e.getMessage <- none
+                duplicates = ""
+            end catch
+        
+        duplicatesFinder
+        IMPORT String duplicates, Integer shipCount, Ship[] ships
+        EXPORT String duplicates
+        ASSERTION: Duplicates will be found and returned 
+        ALGORITHM:
+            FOR INTEGER i = 0 TO shipCount (Exclusive) CHANGEBY 1
+                FOR INTEGER iK = 0 TO shipCount (Exclusive) CHANGEBY 1
+                    IF ships[i].equals(ships[iK]) && i != ik
+                        duplicates += "\n " + ships[i] 
+                        + " is a duplicate of " + ships[iK]
+                    END IF
+                END FOR
+            END FOR    
+            IF duplicates IS EMPTY // because no duplicates
+                duplicates := "There are no duplicate ships!"
+            END IF       
+
+        viewShips
+        IMPORT none
+        EXPORT String shipView
+        ASSERTION: Ships outputted to String and returned
+        ALGORITHM
+            if shipCount < 1 THEN
+                throw illegalargumentexception "There are no ships!"
+            end if
+            shipView = viewShipsLoop <- none
+            catch illegalargumentexception e
+                Error.showError <- e.getMessage <- none
+                shipView := ""
+            end catch
+
+        viewShipsLoop
+        IMPORT none
+        EXPORT String shipView
+        ASSERTION: Submarines outputted to String and returned
+        ALGORITHM
+            FOR INTEGER i = 0 TO shipsCount (Exclusive) CHANGEBY 1
+                shipToString (ARRAY OF STRING) := ships[i].toFileString <- none .split <- (",")
+                type := shipToString[0]
+                shipView += "\n " + type + i + ": " + ships[i].toString
+            END FOR
+
+        getShipArray
+        IMPORT none
+        EXPORT Ship[] ships        
+        ASSERTION: ships returned
+        ALGORITHM:
+            return ships
+        
+        getShipCount
+        IMPORT none
+        EXPORT Integer shipCount
+        ASSERTION: classfield returned rather than count of shipArray.
+        ALGORITHM:
+            return shipCount
+
+
+        equals        
+        IMPORT Object inObject
+        EXPORT boolean isEqual
+        ASSERTION: arrays of two objects compared and returned isequals
+        ALGORITHM:
+            isEqual = true
+            IF inObject is instance of ShipStorage THEN
+                inShipStorage = (ShipStorage)inObject
+                IF (inShipStorage.getShipsArray.length NOT EQUAL ships.length 
+                THEN
+                    isEqual = false
+                ELSE
+                    IF checkEqual <- inShipStorage.getShipsArray
+                    THEN
+                        isEqual = true
+                END IF
+            ELSE
+                isEqual = false
+            END IF
+
+        checkEqual
+        IMPORT Ships[] inShipArray
+        EXPORT boolean isEqual
+        ASSERTION: will check submarine arrays equal
+        ALGORITHM:
+            count = 0
+            DO
+                isEqual = inShipArray[count].equals<-ships[count]
+                count + 1
+            WHILE equal and count < LENGTH OF ships
+        END checkEqual

@@ -1,0 +1,391 @@
+class UserInterface
+    class constants:
+        int EXIT := 7       
+    class fields: 
+        ShipStorage shipStorage
+    class methods:
+        default constructor
+        IMPORT none
+        EXPORT none
+        ASSERTION: a userInterface is established
+        ALGORITHM:
+            shipStorage := ShipStorage // init shipstorage
+        end def constructor
+
+        mainMenu
+        IMPORT none
+        EXPORT none
+        ASSERTION: main menu displayed
+        ALGORITHM:
+            prompt = "Input your selection"
+            do
+                try
+                    OUTPUT "*******************************************************"
+                    OUTPUT "* The program can currently do this:                  *"
+                    OUTPUT "* It can hold a maximum of 30 Ships (15 of each)      *"
+                    OUTPUT "* You currently have " + shipStorage.getShipCount " 
+                              + " Ships"
+                    OUTPUT "* 1. addShip (Enter 1)                                *"
+                    OUTPUT "* 2. view all ships (Enter 2)                         *"
+                    OUTPUT "* 3. DestinationCheck (Enter 3)                       *"
+                    OUTPUT "* 4. FindDuplicates (Enter 4)                         *"
+                    OUTPUT "* 5. File Input (Enter 5)                              *"
+                    OUTPUT "* 6. File Output (Enter 6)                            *"
+                    OUTPUT "* 7. Exit (Enter 7)                                   *"
+                    OUTPUT "*******************************************************"
+                    selection := integerInput <- prompt
+                    methodCaller <- selection
+                catch inputMismatchException
+                    CLEAR INPUT
+                    prompt = "Invalid Selection! /n Input your selection:"
+            while selection NOT EXIT
+        end mainmenu
+            
+        methodCaller
+        IMPORT integer Selection
+        EXPORT none
+        ASSERTION: will call the method associated with choice.
+            ALGORITHM:
+            CASE selection OF:
+                1: 
+                    addShipSelection <- none
+                2:
+                    shipStorage.viewShips <- none // account for if no ships
+                3:
+                    valid := false
+                    distance := 0
+                    DO
+                        TRY
+                            distance := integerInput("Input Distance")
+                            if distance <= 0 THEN
+                                throw IllegalArgumentException
+                            valid := true
+                        CATCH IllegalArgumentException OR INPUTMISMATCH
+                            showError "Invalid Distance!"
+                    WHILE valid not true
+                    OUTPUT shipStorage.destinationCheck <- distance
+                4: // if no ships
+                    duplicates <- shipStorage.findDuplicates <- none
+                    OUTPUT duplicates
+                5:
+                    fileInput <- none
+                6:
+                    fileOutput <- none
+                EXIT:
+                    OUTPUT "Goodbye User!"
+                default:
+                    showError "Invalid Selection!"
+        end methodCaller
+
+        addShipSelection
+        IMPORT none
+        EXPORT none
+        ASSERTION: figure out whether jet or sub
+        ALGORITHM:
+            prompt := "Do you wish to add a Jet (Enter 1) or a Submarine? 
+                       (Enter 2)"
+            DO
+                TRY
+                    selection := intInput <- prompt
+                    IF selection = 1 THEN
+                        addJet <- none    
+                    ELSE IF selection = 2 THEN
+                        addSub <- none
+                    ELSE THEN
+                        showError <- "Invalid Input!"
+                catch inputmismatchexception
+                    showError "Invalid Input!"
+            WHILE selection < 0 OR selection > 2
+        end addShipSelection
+
+        addJet
+        IMPORT none
+        EXPORT none
+        ASSERTION: add a jet
+        ALGORITHM:
+            year := yearValidation <- "What is the commission year of 
+                                       FighterJet?
+                                       \nA value between 1950 and 2022"
+            ordanace := ordanaceValidation <- "What is the Ordanace of 
+                                               FighterJet?"
+            wingSpan := wingSpanValidation <- "What is the Wingspan of 
+                                               FighterJet?
+                                             \nReal value between 2.2 and 25.6"
+            serialNum := serialNumValidation <-  "What is SerialNum of 
+                                                  FighterJet? 
+                                                  \n(XXX.YYY) (Real)"
+            engine := addEngine <- none
+            ShipStorage.AddShip <- FighterJet <- year, ordanace, wingspan,
+                                                 serialNum, engine
+        end addJet
+
+        addSub
+        IMPORT none
+        EXPORT none
+        ASSERTION: add a submarine
+        ALGORITHM:
+                year := yearValidation <- 
+                                    "What is the commission year of Submarine?
+                                    \nA value between 1950 and 2022"
+                hull := hullValidation <- 
+                                      "What is Hull of Submarine? (String)
+                                      \nSteel, Alloy, Titanium"
+                maxDepth := maxDepthValidation <- 
+                                                "What is maxDepth of Submarine? 
+                                                 \n(-value) (Real)"
+                serialNum := serialNumValidation <- "What is SerialNum of 
+                                                     Submarine? 
+                                                     \n(XXX.YYY) (Real)"
+                engine := addEngine <- none
+                ShipStorage.AddShip <- Submarine <- year,hull,maxDepth,
+                                                    serialNum, engine
+
+        addEngine
+        IMPORT NONE
+        EXPORT engine
+        ASSERTION: Will create engine based on user input
+            fuel := fuelValidation <- "Please input the fuel the engine uses
+                                       (Battery, Bio, Diesel)"
+            cylinders := cylinderValidation <- "Please input the cylinders the
+                                                engine has (Integer number
+                                                between 2 and 20)"
+            CONSTRUCT engine USING fuel, cylinders        
+
+        fileInput
+        import none
+        export none
+        assertion it will input a file read it and turn it into ship
+        algorithm:
+            filename := stringInput <- "Input filename to recieve input from"
+            extension := stringInput <- "Enter extension if any
+            e.g. csv, doc, text (dont enter .)"
+            IF extension is EMPTY THEN
+                filename := filename + extension
+            ELSE THEN
+                filename := filename + "." + extension
+            END IF
+            FileManager.input <- filename, shipStorage
+
+        fileOutput
+        import none
+        export none
+        assertion it will output to a file based on input
+        algorithm:
+            filename := stringInput <- "Input filename to output to"
+            extension := stringInput <- "Enter extension if any
+            e.g. csv, doc, text (dont enter .)"
+            IF extension is EMPTY then
+                filename := filename + extension
+            ELSE THEN
+                filename := filename + "." + extension
+            END IF
+            FileManager.output <- filename, shipStorage
+
+        showError
+        IMPORT error (String)
+        EXPORT none
+        ASSERTION: Show error to user
+            OUTPUT error
+
+        integerInput
+        IMPORT prompt (String)
+        EXPORT intOut (Integer)
+        ASSERTION: Will take in a prompt and output a integer.
+        ALGORITHM:
+            OUTPUT prompt
+            INPUT intOut (Integer)
+
+        realInput
+        IMPORT prompt (String)
+        EXPORT realOut (Real)
+        ASSERTION: Will take in a prompt and output a real.
+        ALGORITHM:
+            OUTPUT prompt
+            INPUT realOut (Real)
+
+        stringInput
+        IMPORT prompt (String)
+        EXPORT stringOut (Real)
+        ASSERTION: Will take in a prompt and output a string.
+        ALGORITHM:
+            OUTPUT prompt
+            INPUT stringOut (String)
+
+        yearValidation
+        IMPORT prompt (String)
+        EXPORT year (Integer)
+        ASSERTION: will recieve input for year, validate it, then set it
+        ALGORITHM:
+            valid := false
+            DO
+                TRY
+                    year := intInput <- prompt
+                    IF year < 1950 OR year > 2022 THEN
+                        throw IllegalArgumentException
+                    valid = true // WILL BE SKIPPED IF EXCEPTION CAUGHT
+                CATCH IllegalArgumentException OR InputMismatchException
+                    prompt := "That is a invalid value for year, please
+                               enter a integer number between
+                               1950 and 2022"
+            WHILE valid = false
+
+        ordanaceValidation
+        IMPORT prompt (String)
+        EXPORT ordanace (String)
+        ASSERTION: will recieve input for ordanace, validate it, then return
+            valid := false
+            DO
+                TRY
+                    ordanace := stringInput <- prompt
+                    IF ordanace is empty THEN
+                        throw illegal argument exception
+                    valid = true // WILL BE SKIPPED IF EXCEPTION CAUGHT
+                CATCH IllegalArgumentException OR InputMismatchException
+                    prompt := "That is a invalid string for ordanace,
+                               please try again."
+            WHILE valid = false
+
+        wingSpanValidation
+        IMPORT prompt (String)
+        EXPORT wingSpan (Real)
+        ASSERTION: will recieve input for wingspan, validate it, then return it
+        ALGORITHM:
+            valid := false
+            DO
+                TRY
+                    wingSpan := realInput <- prompt
+                    IF wingSpan < 2.2 OR wingSpan > 25.6 THEN
+                        throw IllegalArgumentException
+                    valid := true // WILL BE SKIPPED IF EXCEPTION CAUGHT
+                CATCH IllegalArgumentException OR InputMismatchException
+                    prompt := "That is a invalid wingSpan
+                               \nIt should be between 2.2 and 25.6"
+            WHILE valid = false
+
+        serialNumValidation
+        IMPORT prompt (String)
+        EXPORT serialNum (Real)
+        ASSERTION: will recieve input for serialNum, validate it, then returnit
+        ALGORITHM:
+            valid := false
+            DO
+                TRY
+                    serialNum := realInput <- prompt
+                    IF validSerial <- serialNum = FALSE THEN
+                        throw IllegalArgumentException
+                    valid := true // WILL BE SKIPPED IF EXCEPTION CAUGHT
+                CATCH IllegalArgumentException OR InputMismatchException
+                    prompt := "That is a invalid serial number!
+                               \nIt should be (XXX.YYY) and of type Real"
+            WHILE valid = false
+
+        hullValidation
+        IMPORT prompt (String)
+        EXPORT hull (String)
+        ASSERTION: will recieve input for hull, validate it, then set it
+        ALGORITHM:
+            valid := false
+            DO
+                TRY
+                    hull := stringInput <- prompt
+                    IF validHull <- hull = false THEN
+                        throw IllegalArgumentException
+                    valid := true // will be skipped if exception caught
+                CATCH IllegalArgumentException OR InputMismatchException
+                    prompt := "That is a invalid hull!
+                               \nSteel, Alloy, Titanium"
+            WHILE valid = false
+
+        validHull
+        IMPORT inHull
+        EXPORT valid (Boolean)
+        ASSERTION: will return if valid or not
+        ALGORITHM:
+            inHull = inHull.toUpperCase
+            valid := false
+            FOR integer i = 0 TO 2 (inclusive) CHANGEBY 1
+                IF inHull = VALIDHULL[i] THEN
+                    valid := true
+            END FOR
+        END VALIDHULL           
+
+        validSerial
+        IMPORT inSerialNum (Real)
+        EXPORT validSerialNum (boolean)
+        ASSERTION: Will return if serialNum valid
+        ALGORITHM:
+            // VERIFY ITS XXX.YYY
+            boolean validSerialNum = false
+            String inSerialString := toString <- inSerialNum
+            IF (LENGTH OF inSerialString) >= 5 && < 8 THEN
+                serials (STRING ARRAY OF SIZE 2) = split <- inSerialString, "."
+                if parseInt <- serials[0] > 99 AND parseInt <- serials[0] < 301
+                    AND parseInt <- serials[1] > 000 AND
+                    parseInt <- serials[1] < 1000 THEN
+                     validSerialNum := true
+        end validserial
+
+        maxDepthValidation
+        IMPORT prompt (String)
+        EXPORT depth (Real)
+        ASSERTION: will recieve input for depth, validate it, then return it
+        ALGORITHM:
+            valid := false
+            DO
+                TRY
+                    realInput <- prompt
+                    if realInput < -500.0 OR realInput > 0 THEN
+                        throw IllegalArgumentException
+                    valid := true // will be skipped if exception caught
+                CATCH IllegalArgumentException OR InputMismatchException
+                    prompt := "That is a invalid depth!
+                               \nMust be between -500 and 0"
+            WHILE valid = false
+
+        fuelValidation
+        IMPORT prompt (String)
+        EXPORT fuel (String)
+        ASSERTION: will recieve input for fuel, validate it, return it
+        ALGORITHM:
+            valid := false
+            DO
+                TRY
+                    fuel := stringInput <- prompt
+                    IF !validFuel <- fuel THEN
+                        THROW IllegalArgumentException
+                    valid := true
+                CATCH IllegalArgumentException OR InputMismatchException
+                    showError "That is a invalid fueltype!"
+                              + "\nMust be battery, bio or diesel!"
+            WHILE !valid
+        
+        validFuel
+        IMPORT inFuel (String)
+        EXPORT valid (Boolean)
+        ASSERTION: Will check if valid fueltype.
+        ALGORITHM:
+            inFuel = inFuel.toUpperCase <- none
+            valid := false
+            FOR integer i = 0 TO 3 (exclusive) CHANGEBY 1
+                IF inFuel = FUELTYPES[i] THEN
+                    validFuel := true
+            END FOR
+
+        cylinderValidation
+        IMPORT prompt (String)
+        EXPORT cylinders (Integer)
+        ASSERTION: Will validate and return cylinders
+        ALGORITHM:
+            valid := false
+            DO
+                TRY
+                    cylinders := integerInput <- prompt
+                    IF cylinders < 2 OR cylinders > 20 THEN
+                        THROW Illegal Argument Exception
+                    valid := true
+                CATCH IllegalArgumentException OR InputMismatchException
+                    showError <- "Invalid Cylinders Input!, 
+                                  must be greater than 2 less than 20"
+            while !valid
+                
+end class

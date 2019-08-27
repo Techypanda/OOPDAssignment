@@ -1,0 +1,101 @@
+class Engine
+    constants:
+        FUELTYPES (String Array Of Size 3) // BATTERY, DIESEL, BIO
+    classfields:
+        fuel (String) // BATTERY DIESEL OR BIO
+        cylinders (Integer) // between 2 and 20
+    methods:
+        def constructor
+        IMPORT EXPORT NONE
+        ASSERTION: Basic Engine Constructed
+        ALGORITHM:
+            fuel = "BATTERY"
+            cylinders = 2
+        end def const
+
+        alt constructor
+        IMPORT inFuel (String), inCylinders (Integer)
+        ASSERTION: A engine built off values constructed
+        ALGORITHM:
+            setFuel <- inFuel
+            setCylinders <- inCylinders
+        end alt constructor
+
+        copy constructor
+        IMPORT inEngine (Engine)
+        ASSERTION: a Engine will be referenced
+        ALGORITHM:
+            setFuel <- inEngine.getFuel <- none
+            setCylinders <- inEngine.getCylinders <- none
+        end copy constructor
+
+        clone
+        IMPORT none
+        EXPORT engineClone (engine)
+        ASSERTION: Engine clone output
+        ALGORITHM:
+            engineClone := copyConstructor <- this
+        end clone
+        
+        equals
+        IMPORT inObject
+        EXPORT isEquals
+        ASSERTION: will return if equal or not
+        ALGORITHM:
+            isEquals := false
+            if inObject is a Engine THEN
+                inEngine := inObject
+                IF fuel = inEngine.fuel THEN
+                    if cylinders = inEngine.fuel THEN
+                        isEquals := true
+        end equals
+
+        baseAccessor
+        IMPORT nothing
+        EXPORT associatedValue
+        ASSERTION: will export a copy of associated value
+        ALGORITHM:
+            export copy of associatedValue
+        END base accessor
+
+        toString
+        IMPORT nothing
+        EXPORT engineString
+        ASSERTION: will return values in a string.
+        ALGORITHM:
+            engineString := "The fuel in engine is " + fuel + "the cylinders is"
+                            + " " + cylinders
+        end toString
+
+        setFuel
+        IMPORT inFuel (String)
+        ASSERTION : sets value of fuel
+        ALGORITHM:
+            IF validFuel <- inFuel = false THEN
+                throw illegal argument exception
+            fuel := inFuel.toLowerCase <- none
+        end setFuel
+
+        setCylinders
+        IMPORT inCylinders (Integer)
+        ASSERTION: sets value of cylinders
+        ALGORITHM:
+            IF inCylinders < 2 OR inCylinders > 20 THEN
+                throw illegal argument exception
+            cylinders := inCylinders
+        end setCylinders
+
+        validFuel
+        IMPORT inFuel (String)
+        EXPORT validFuel (Boolean)
+        ASSERTION: will make sure its valid
+        ALGORITHM:
+            inFuel := inFuel.toUpperCase <- none
+            validFuel := false
+            FOR integer i = 0 TO 3 (exclusive) CHANGEBY 1
+                if inFuel = FUELTYPES[i] THEN
+                    validFuel := true
+            END FOR
+        end validFuel
+
+end class

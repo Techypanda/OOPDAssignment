@@ -1,0 +1,105 @@
+class FighterJet
+    classfields:
+        ordanace (String) / non empty string
+        wingSpan (Real) / between 2.20 and 25.6
+    class methods:
+        def constructor
+        IMPORT/EXPORT: NONE
+        ASSERTION: a jet made
+        ALGORITHM:
+            CONSTRUCT super USING default
+            ordanace := "Description"
+            wingSpan := 2.20
+        end def cons
+
+        alt constructor
+        IMPORT inYear (Integer), inOrdanace (String), inWingSpan (Real), 
+               inSerialNum (Real), inEngine (Engine)   
+        ASSERTION: JET MADE OFF VALUES
+        ALGORITHM:
+            CONSTRUCT super USING alternate <- inYear, inSerialNum, inEngine
+            setOrdanace <- inOrdanace
+            setWingSpan <- inWingSpan
+        end alt cons
+
+        copy constructor
+        IMPORT inFighterJet (FighterJet)
+        ASSERTION: a jet will be referenced
+        ALGORITHM:
+            CONSTRUCT super USING copy <- inFighterJet
+            ordanace = inFighterJet.getOrdanace <- none
+            wingSpan = inFighterJet.getWingSpan <- none
+        end copy cons
+
+        clone
+        IMPORT nothing
+        EXPORT jetClone (FighterJet)
+        ASSERTION: a jet will be returned, copied.
+        ALGORITHM:
+            jetClone := copyConstructor <- this
+        end clone
+
+        baseAccessor
+        IMPORT nothing
+        EXPORT associatedValue
+        ASSERTION: will export a copy of associated geta
+        ALGORITHM:
+            export copy of associatedfValue
+        end baseAccessor
+
+        equals
+        IMPORT inObject (Object)
+        EXPORT isEqual (Boolean)
+        ASSERTION: will return if same or not
+        ALGORITHM:
+            isEqual := false
+            IF inObject is a FighterJet THEN
+                inFighterJet := (FighterJet)inObject
+                IF super.equals <- inFighterJet THEN
+                    IF ordanace = inFighterJet.getOrdanace <- none THEN
+                        IF wingSpan = inFighterJet.getWingSpan <- none THEN
+                            isEqual := true
+            END IF
+        end equals
+
+        toString
+        IMPORT nothing
+        EXPORT jetString (String)
+        ASSERTION: will return values in a string.
+        ALGORITHM:
+            fighterString := super.toString + 
+            " this ship is a FighterJet and it has a "
+            + "ordanace of " + ordanace + " and a wingSpan of " + wingSpan
+        end toString
+
+        setOrdanace
+        IMPORT inOrdanace (String)
+        EXPORt nothing
+        ASSERTION: set ordanace
+            IF inOrdanace is empty THEN
+                throw illegal argument exception
+            ordanace := inOrdanace
+        end setOrdanace
+        
+        setWingSpan
+        IMPORT inWingSpan (Real)
+        EXPORT nothing
+        ASSERTION: set wingspan
+            IF inWingSpan < 2.2 OR inWingSpan > 25.6 THEN
+                throw illegal argument exception
+            wingSpan := inWingspan
+        end setWingSpan
+
+        calcDistance
+        IMPORT distance (Integer)
+        EXPORT hoursTaken (Real)
+        ASSERTION: Will return the number of hours taken to traverse distance
+        ALGORITHM:
+            hoursTaken := (Real)distance / (wingSpan * (Real)engine.getCylinders <- none * 
+                          150.0)
+
+        toFileString
+        stringToReturn := "F," + super.getSerialNum() + "," + super.getYear()
+        + "," + super.getEngine().getCylinders() + "," super.getEngine().getFuel()
+        + "," + wingSpan + "," + ordanace
+END CLASS
